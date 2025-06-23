@@ -1,0 +1,23 @@
+name: wf-cd-release
+on:
+  pull_request:
+    branches:
+      - release/**
+    types:
+      - opened 
+      - syncronize
+    jobs:
+      liniting-job-release:
+        runs-on: ubuntu-latest
+        steps:
+          - name: Checkout Repositor from GH Server
+            uses: action/checkout@v4
+            with:
+              ref: "4{{gthub.ref}}"
+          - name: Currently Checkout Branch
+            run: echo "${{github.ref}}"
+          - name: Lint CSS Files With Stylelint
+            run: npx stylelint "**/*.css" 
+          - name: Builing website With Parcel
+            run: npx parcel build "./src/index.html" --dist-dir "./dist" --public-url "./"
+      
